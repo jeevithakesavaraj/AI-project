@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Projects API</title>
+</head>
+<body>
+    <h1>Test Projects API</h1>
+    <button onclick="testProjectsAPI()">Test Projects API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testProjectsAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                // First login
+                const loginResponse = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@projectmanagement.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                const loginData = await loginResponse.json();
+                console.log('Login response:', loginData);
+                
+                if (!loginData.data?.token) {
+                    resultDiv.innerHTML = 'Login failed: ' + JSON.stringify(loginData);
+                    return;
+                }
+                
+                // Then get projects
+                const projectsResponse = await fetch('/api/projects', {
+                    headers: {
+                        'Authorization': `Bearer ${loginData.data.token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const projectsData = await projectsResponse.json();
+                console.log('Projects response:', projectsData);
+                
+                resultDiv.innerHTML = `
+                    <h3>Success!</h3>
+                    <p>Login: ${loginResponse.status}</p>
+                    <p>Projects: ${projectsResponse.status}</p>
+                    <p>Number of projects: ${projectsData.data?.projects?.length || 0}</p>
+                    <pre>${JSON.stringify(projectsData, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.innerHTML = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html> 

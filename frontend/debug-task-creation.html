@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Task Creation Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .error { color: red; }
+        .success { color: green; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Frontend Task Creation Debug</h1>
+    
+    <div class="debug-section">
+        <h3>Step 1: Login</h3>
+        <button onclick="login()">Login as Admin</button>
+        <button onclick="loginUser()">Login as User</button>
+        <div id="login-status"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 2: Get Projects</h3>
+        <button onclick="getProjects()" id="get-projects-btn" disabled>Get Projects</button>
+        <div id="projects-list"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 3: Create Task</h3>
+        <select id="project-select" disabled>
+            <option value="">Select a project...</option>
+        </select>
+        <button onclick="createTask()" id="create-task-btn" disabled>Create Test Task</button>
+        <div id="create-task-result"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Debug Info</h3>
+        <div id="debug-info"></div>
+    </div>
+
+    <script>
+        let authToken = null;
+        let projects = [];
+
+        function updateDebugInfo() {
+            document.getElementById('debug-info').innerHTML = `
+                <p><strong>Token:</strong> ${authToken ? 'Present' : 'Missing'}</p>
+                <p><strong>Projects:</strong> ${projects.length}</p>
+                <p><strong>Selected Project:</strong> ${document.getElementById('project-select').value || 'None'}</p>
+            `;
+        }
+
+        async function login() {
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'admin@projectmanagement.com',
+                        password: 'admin123'
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.data.token;
+                    document.getElementById('login-status').innerHTML = '<span class="success">✅ Admin login successful</span>';
+                    document.getElementById('get-projects-btn').disabled = false;
+                    updateDebugInfo();
+                } else {
+                    document.getElementById('login-status').innerHTML = '<span class="error">❌ Login failed</span>';
+                }
+            } catch (error) {
+                document.getElementById('login-status').innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+            }
+        }
+
+        async function loginUser() {
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'user@projectmanagement.com',
+                        password: 'user123'
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.data.token;
+                    document.getElementById('login-status').innerHTML = '<span class="success">✅ User login successful</span>';
+                    document.getElementById('get-projects-btn').disabled = false;
+                    updateDebugInfo();
+                } else {
+                    document.getElementById('login-status').innerHTML = '<span class="error">❌ Login failed</span>';
+                }
+            } catch (error) {
+                document.getElementById('login-status').innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+            }
+        }
+
+        async function getProjects() {
+            try {
+                const response = await fetch('/api/projects', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    projects = data.data.projects;
+                    
+                    const projectSelect = document.getElementById('project-select');
+                    projectSelect.innerHTML = '<option value="">Select a project...</option>';
+                    
+                    projects.forEach(project => {
+                        const option = document.createElement('option');
+                        option.value = project.id;
+                        option.textContent = project.name;
+                        projectSelect.appendChild(option);
+                    });
+
+                    document.getElementById('projects-list').innerHTML = `
+                        <span class="success">✅ Found ${projects.length} projects</span>
+                        <pre>${JSON.stringify(projects, null, 2)}</pre>
+                    `;
+                    
+                    projectSelect.disabled = false;
+                    updateDebugInfo();
+                } else {
+                    document.getElementById('projects-list').innerHTML = '<span class="error">❌ Failed to get projects</span>';
+                }
+            } catch (error) {
+                document.getElementById('projects-list').innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+            }
+        }
+
+        async function createTask() {
+            const projectId = document.getElementById('project-select').value;
+            if (!projectId) {
+                document.getElementById('create-task-result').innerHTML = '<span class="error">❌ Please select a project first</span>';
+                return;
+            }
+
+            try {
+                const taskData = {
+                    title: 'Frontend Test Task',
+                    description: 'This is a test task created from frontend debug',
+                    status: 'TODO',
+                    priority: 'MEDIUM',
+                    type: 'TASK',
+                    storyPoints: 2
+                };
+
+                console.log('Creating task with data:', taskData);
+                console.log('Project ID:', projectId);
+                console.log('Token:', authToken ? 'Present' : 'Missing');
+
+                const response = await fetch(`/api/tasks/projects/${projectId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskData)
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
+                const result = await response.json();
+                console.log('Response data:', result);
+
+                if (response.ok) {
+                    document.getElementById('create-task-result').innerHTML = `
+                        <span class="success">✅ Task created successfully!</span>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    `;
+                } else {
+                    document.getElementById('create-task-result').innerHTML = `
+                        <span class="error">❌ Task creation failed (${response.status})</span>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('create-task-result').innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+                console.error('Task creation error:', error);
+            }
+        }
+
+        // Update debug info on page load
+        updateDebugInfo();
+    </script>
+</body>
+</html> 

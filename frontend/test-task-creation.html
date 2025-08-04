@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Creation Test</title>
+</head>
+<body>
+    <h1>Task Creation Test</h1>
+    <button onclick="testTaskCreation()">Test Task Creation</button>
+    <div id="result"></div>
+
+    <script>
+        async function testTaskCreation() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+
+            try {
+                // First, login to get a token
+                const loginResponse = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@projectmanagement.com',
+                        password: 'admin123'
+                    })
+                });
+
+                if (!loginResponse.ok) {
+                    throw new Error(`Login failed: ${loginResponse.status}`);
+                }
+
+                const loginData = await loginResponse.json();
+                const token = loginData.data.token;
+                console.log('Login successful, token:', token);
+
+                // Get projects to find a project ID
+                const projectsResponse = await fetch('/api/projects', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!projectsResponse.ok) {
+                    throw new Error(`Failed to get projects: ${projectsResponse.status}`);
+                }
+
+                const projectsData = await projectsResponse.json();
+                console.log('Projects:', projectsData);
+
+                if (!projectsData.data.projects || projectsData.data.projects.length === 0) {
+                    throw new Error('No projects found');
+                }
+
+                const projectId = projectsData.data.projects[0].id;
+                console.log('Using project ID:', projectId);
+
+                // Create a task
+                const taskData = {
+                    title: 'Test Task',
+                    description: 'This is a test task',
+                    status: 'TODO',
+                    priority: 'MEDIUM',
+                    type: 'TASK'
+                };
+
+                console.log('Creating task with data:', taskData);
+
+                const createTaskResponse = await fetch(`/api/tasks/projects/${projectId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(taskData)
+                });
+
+                console.log('Create task response status:', createTaskResponse.status);
+                console.log('Create task response headers:', createTaskResponse.headers);
+
+                const createTaskData = await createTaskResponse.json();
+                console.log('Create task response:', createTaskData);
+
+                if (createTaskResponse.ok) {
+                    resultDiv.innerHTML = `
+                        <h3>✅ Task Creation Successful!</h3>
+                        <p>Task ID: ${createTaskData.data.task.id}</p>
+                        <p>Title: ${createTaskData.data.task.title}</p>
+                        <pre>${JSON.stringify(createTaskData, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3>❌ Task Creation Failed</h3>
+                        <p>Status: ${createTaskResponse.status}</p>
+                        <pre>${JSON.stringify(createTaskData, null, 2)}</pre>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 
