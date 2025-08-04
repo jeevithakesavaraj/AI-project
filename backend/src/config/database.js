@@ -1,19 +1,25 @@
-import pkg from 'pg';
-const { Pool } = pkg;
+import pg from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const pool = new Pool({
+const { Pool } = pg;
+
+// Use DATABASE_URL for production (Render) or individual config for development
+const config = process.env.DATABASE_URL ? {
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+} : {
   user: process.env.DB_USER || 'postgres',
   host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'project_management_db',
+  database: process.env.DB_NAME || 'project_management',
   password: process.env.DB_PASSWORD || 'password',
   port: process.env.DB_PORT || 5432,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-});
+};
+
+const pool = new Pool(config);
 
 // Test the connection
 pool.on('connect', () => {

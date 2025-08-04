@@ -80,7 +80,7 @@ const TimeTrackingAnalytics: React.FC<TimeTrackingAnalyticsProps> = ({ filters }
 
         <div className="bg-white border border-gray-200 rounded-lg p-4">
           <div className="flex items-center space-x-2">
-            <BarChart3 className="h-5 w-5 text-purple-600" />
+            <ChartBarIcon className="h-5 w-5 text-purple-600" />
             <span className="text-sm font-medium text-gray-500">Tasks</span>
           </div>
           <p className="text-2xl font-bold text-gray-900 mt-2">
@@ -90,7 +90,7 @@ const TimeTrackingAnalytics: React.FC<TimeTrackingAnalyticsProps> = ({ filters }
 
         <div className="bg-white border border-gray-200 rounded-lg p-4">
           <div className="flex items-center space-x-2">
-            <BarChart3 className="h-5 w-5 text-orange-600" />
+            <ChartBarIcon className="h-5 w-5 text-orange-600" />
             <span className="text-sm font-medium text-gray-500">Projects</span>
           </div>
           <p className="text-2xl font-bold text-gray-900 mt-2">
