@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRoutes from './routes/authRoutes.js';
-import projectRoutes from './routes/projectRoutes.js';
-import taskRoutes from './routes/taskRoutes.js';
-import kanbanRoutes from './routes/kanbanRoutes.js';
-import userRoutes from './routes/userRoutes.js';
+import authRoutes from './routes/auth.js';
+import projectRoutes from './routes/projects.js';
+import taskRoutes from './routes/tasks.js';
+import kanbanRoutes from './routes/kanban.js';
+import userRoutes from './routes/users.js';
 
 dotenv.config();
 
