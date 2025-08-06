@@ -14,7 +14,7 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: CORS_ORIGIN
-        value: https://project-management-frontend.onrender.com
+        value: https://project-management-frontend-40ud.onrender.com
 
   - type: web
     name: project-management-frontend
@@ -23,4 +23,4 @@ services:
     staticPublishPath: ./frontend/dist
     envVars:
       - key: VITE_API_URL
-        value: https://project-management-backend.onrender.com 
+        value: https://project-management-backend-uy3q.onrender.com 
