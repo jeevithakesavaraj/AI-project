@@ -3,7 +3,7 @@ services:
     name: project-management-backend
     env: node
     buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    startCommand: cd backend && npm run setup-db && npm start
     envVars:
       - key: NODE_ENV
         value: production

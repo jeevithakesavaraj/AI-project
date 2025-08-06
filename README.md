@@ -1,223 +1,250 @@
 # Project Management System
 
-A full-stack project management application built with React, Node.js, and PostgreSQL.
+A modern, full-stack project management application built with React, Node.js, and PostgreSQL. Features user authentication, role-based access control, task management, and a Kanban board interface.
 
-## Features
+## 🚀 Features
 
-- ✅ User authentication and authorization
-- ✅ Project creation and management
-- ✅ Task management with Kanban board
-- ✅ User role management (Admin/User)
-- ✅ Task assignment and tracking
-- ✅ Real-time updates
-- ✅ Responsive design
+### **User Management**
+- ✅ User registration and authentication
+- ✅ Role-based access control (Admin/User)
+- ✅ Profile management and password updates
+- ✅ Admin user management interface
 
-## Tech Stack
+### **Project Management**
+- ✅ Create and manage multiple projects
+- ✅ Project member management with roles
+- ✅ Project progress tracking
+- ✅ Project statistics and analytics
 
-### Frontend
-- React 18
-- Vite
-- Tailwind CSS
-- React Router DOM
-- Axios
-- React Query
+### **Task Management**
+- ✅ Create, assign, and track tasks
+- ✅ Priority levels and due dates
+- ✅ Task status management (TODO, IN_PROGRESS, IN_REVIEW, DONE)
+- ✅ Task assignment to any user (Admin feature)
+- ✅ Task filtering and search
 
-### Backend
-- Node.js
-- Express.js
-- PostgreSQL
-- JWT Authentication
-- Joi Validation
+### **Kanban Board**
+- ✅ Drag-and-drop task management
+- ✅ Visual project progress tracking
+- ✅ Real-time status updates
+- ✅ Task position management
 
-## Deployment to Render
+### **Admin Features**
+- ✅ Assign tasks to any user (not just project members)
+- ✅ Manage all projects and users
+- ✅ User role and status management
+- ✅ System-wide task management
 
-### Step 1: Prepare Your Repository
+## 🛠️ Technology Stack
 
-1. **Commit all your changes to Git:**
-   ```bash
-   git add .
-   git commit -m "Prepare for deployment"
-   git push origin main
-   ```
+### **Frontend**
+- **React 18** - Modern UI framework
+- **Vite** - Fast build tool
+- **Tailwind CSS** - Utility-first CSS framework
+- **React Router DOM** - Client-side routing
+- **Axios** - HTTP client
+- **React Query** - Server state management
+- **React Hook Form** - Form handling
 
-2. **Ensure your repository structure is correct:**
-   ```
-   project-management/
-   ├── frontend/
-   │   ├── package.json
-   │   ├── src/
-   │   └── dist/ (will be generated)
-   ├── backend/
-   │   ├── package.json
-   │   └── src/
-   ├── render.yaml
-   └── README.md
-   ```
+### **Backend**
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **PostgreSQL** - Relational database
+- **JWT** - Authentication tokens
+- **Joi** - Input validation
+- **bcryptjs** - Password hashing
 
-### Step 2: Set Up Database
+### **Deployment**
+- **Render** - Backend and database hosting
+- **Vercel** - Frontend hosting (planned)
 
-1. **Create a PostgreSQL database on Render:**
-   - Go to [Render Dashboard](https://dashboard.render.com)
-   - Click "New" → "PostgreSQL"
-   - Choose a name (e.g., "project-management-db")
-   - Select your plan (Free tier available)
-   - Click "Create Database"
+## 📋 Prerequisites
 
-2. **Get your database URL:**
-   - Copy the "External Database URL" from your database settings
-   - This will look like: `postgres://user:password@host:port/database`
+- Node.js 16+ 
+- PostgreSQL database
+- Git
 
-### Step 3: Deploy Backend
+## 🚀 Quick Start
 
-1. **Create a new Web Service:**
-   - Go to [Render Dashboard](https://dashboard.render.com)
-   - Click "New" → "Web Service"
-   - Connect your GitHub repository
-   - Choose the repository with your project
-
-2. **Configure the backend service:**
-   - **Name:** `project-management-backend`
-   - **Environment:** `Node`
-   - **Build Command:** `cd backend && npm install`
-   - **Start Command:** `cd backend && npm start`
-   - **Root Directory:** Leave empty (or specify if needed)
-
-3. **Set Environment Variables:**
-   - Click "Environment" tab
-   - Add the following variables:
-     ```
-     NODE_ENV=production
-     PORT=10000
-     DATABASE_URL=your_postgresql_url_from_step_2
-     JWT_SECRET=your_secure_jwt_secret_key
-     CORS_ORIGIN=https://your-frontend-url.onrender.com
-     ```
-
-4. **Deploy:**
-   - Click "Create Web Service"
-   - Wait for the build to complete
-   - Note the URL (e.g., `https://project-management-backend.onrender.com`)
-
-### Step 4: Deploy Frontend
-
-1. **Create another Web Service:**
-   - Go back to Render Dashboard
-   - Click "New" → "Static Site"
-   - Connect the same GitHub repository
-
-2. **Configure the frontend service:**
-   - **Name:** `project-management-frontend`
-   - **Build Command:** `cd frontend && npm install && npm run build`
-   - **Publish Directory:** `frontend/dist`
-   - **Root Directory:** Leave empty
-
-3. **Set Environment Variables:**
-   - Add the following variable:
-     ```
-     VITE_API_URL=https://your-backend-url.onrender.com
-     ```
-
-4. **Deploy:**
-   - Click "Create Static Site"
-   - Wait for the build to complete
-   - Note the URL (e.g., `https://project-management-frontend.onrender.com`)
-
-### Step 5: Update CORS Settings
-
-1. **Update backend CORS:**
-   - Go to your backend service on Render
-   - Go to "Environment" tab
-   - Update `CORS_ORIGIN` to your frontend URL:
-     ```
-     CORS_ORIGIN=https://project-management-frontend.onrender.com
-     ```
-   - Redeploy the backend service
-
-### Step 6: Initialize Database
-
-1. **Set up database tables:**
-   - You can either:
-     - Run the database setup script locally and connect to the production database
-     - Or manually create the tables using the SQL scripts in your codebase
-
-2. **Create an admin user:**
-   - Use your API endpoints to create the first admin user
-   - Or insert directly into the database
-
-### Step 7: Test Your Deployment
-
-1. **Test the backend:**
-   - Visit: `https://your-backend-url.onrender.com/health`
-   - Should return: `{"status":"OK","timestamp":"...","environment":"production"}`
-
-2. **Test the frontend:**
-   - Visit your frontend URL
-   - Try to register/login
-   - Test the main functionality
-
-## Environment Variables
-
-### Backend (.env)
-```env
-NODE_ENV=production
-PORT=10000
-DATABASE_URL=postgres://user:password@host:port/database
-JWT_SECRET=your_secure_jwt_secret_key
-CORS_ORIGIN=https://your-frontend-url.onrender.com
-```
-
-### Frontend (.env)
-```env
-VITE_API_URL=https://your-backend-url.onrender.com
-```
-
-## Troubleshooting
-
-### Common Issues:
-
-1. **Build fails:**
-   - Check that all dependencies are in package.json
-   - Ensure Node.js version is specified in package.json
-
-2. **Database connection fails:**
-   - Verify DATABASE_URL is correct
-   - Check that SSL is properly configured
-
-3. **CORS errors:**
-   - Ensure CORS_ORIGIN is set correctly
-   - Check that frontend URL is accessible
-
-4. **Environment variables not working:**
-   - Restart the service after adding environment variables
-   - Check variable names are correct
-
-### Useful Commands:
-
+### **1. Clone the Repository**
 ```bash
-# Check build logs
-# Go to your service on Render and check "Logs" tab
-
-# Test API locally
-curl https://your-backend-url.onrender.com/health
-
-# Check database connection
-# Use a PostgreSQL client to connect to your database URL
+git clone <your-repository-url>
+cd project-management
 ```
 
-## Support
+### **2. Install Dependencies**
+```bash
+# Install backend dependencies
+cd backend
+npm install
 
-If you encounter issues:
-1. Check the Render logs for error messages
-2. Verify all environment variables are set correctly
-3. Test the API endpoints individually
-4. Check the database connection
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
 
-## Security Notes
+### **3. Environment Setup**
+```bash
+# Backend (.env)
+DATABASE_URL=your_postgresql_url
+JWT_SECRET=your_secure_jwt_secret
+PORT=5000
 
-- Use strong JWT secrets
-- Enable HTTPS (automatic on Render)
-- Regularly update dependencies
-- Monitor your application logs
-- Use environment variables for sensitive data
+# Frontend (.env)
+VITE_API_URL=http://localhost:5000
+```
 
-Your application should now be live and accessible via the frontend URL! 
+### **4. Database Setup**
+```bash
+# Run database initialization
+cd backend
+node src/scripts/setup-db.js
+```
+
+### **5. Start Development Servers**
+```bash
+# Start backend (from backend directory)
+npm run dev
+
+# Start frontend (from frontend directory)
+npm run dev
+```
+
+## 📁 Project Structure
+
+```
+project-management/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   ├── pages/          # Page components
+│   │   ├── hooks/          # Custom React hooks
+│   │   ├── services/       # API services
+│   │   └── utils/          # Utility functions
+│   └── package.json
+├── backend/                 # Node.js backend API
+│   ├── src/
+│   │   ├── controllers/    # Route controllers
+│   │   ├── routes/         # API routes
+│   │   ├── middleware/     # Express middleware
+│   │   ├── config/         # Configuration files
+│   │   └── scripts/        # Database scripts
+│   └── package.json
+├── docs/                   # Project documentation
+└── README.md
+```
+
+## 🔐 Authentication & Authorization
+
+### **User Roles**
+- **ADMIN**: Full system access, can assign tasks to any user
+- **USER**: Regular user with project-based access
+
+### **Access Control**
+- Users can only access projects they're members of
+- Admins can access all projects and users
+- Task assignment follows role-based permissions
+
+## 🎯 Key Features in Detail
+
+### **Admin Task Assignment**
+- Admins can assign tasks to any user in the system
+- Regular users can only assign to project members
+- Assigned tasks appear in user's task management page
+
+### **Project Management**
+- Create projects with descriptions
+- Add/remove project members
+- Track project progress and statistics
+- Role-based project access
+
+### **Task Management**
+- Full CRUD operations for tasks
+- Priority levels (LOW, MEDIUM, HIGH, URGENT)
+- Due date tracking
+- Status management with Kanban board
+- Task assignment and reassignment
+
+### **Kanban Board**
+- Visual task management
+- Drag-and-drop functionality
+- Real-time status updates
+- Task position management
+- Progress tracking
+
+## 🔧 Development
+
+### **Available Scripts**
+
+#### Backend
+```bash
+npm run dev          # Start development server
+npm start           # Start production server
+npm test            # Run tests
+```
+
+#### Frontend
+```bash
+npm run dev         # Start development server
+npm run build       # Build for production
+npm run preview     # Preview production build
+```
+
+### **API Endpoints**
+
+#### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/auth/me` - Get current user
+
+#### Projects
+- `GET /api/projects` - Get all projects
+- `POST /api/projects` - Create project
+- `PUT /api/projects/:id` - Update project
+- `DELETE /api/projects/:id` - Delete project
+
+#### Tasks
+- `GET /api/tasks` - Get all tasks
+- `POST /api/tasks` - Create task
+- `PUT /api/tasks/:id` - Update task
+- `DELETE /api/tasks/:id` - Delete task
+
+#### Users
+- `GET /api/users` - Get all users (admin only)
+- `POST /api/users` - Create user (admin only)
+- `PUT /api/users/:id` - Update user
+- `DELETE /api/users/:id` - Delete user (admin only)
+
+## 📚 Documentation
+
+Comprehensive documentation is available in the `docs/` folder:
+
+- [Development Process Report](./docs/development-process-report.md)
+- [AI Prompt Library](./docs/ai-prompt-library.md)
+- [Learning & Reflection Report](./docs/learning-reflection-report.md)
+- [Deployment Guide](./docs/deployment-guide.md)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with modern web technologies
+- AI-assisted development with Cursor AI
+- Comprehensive documentation and testing
+- Responsive design for all devices
+
+---
+
+**Built with ❤️ using React, Node.js, and PostgreSQL**
+
+*Last Updated: August 4, 2025* 
