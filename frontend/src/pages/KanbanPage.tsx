@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BarChart3, Grid3X3, Plus } from 'lucide-react';
+import { ArrowLeft, BarChart3, Grid, Plus } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import KanbanBoard from '@/components/KanbanBoard';
 import ProgressTracking from '@/components/ProgressTracking';
@@ -107,7 +107,7 @@ const KanbanPage: React.FC = () => {
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  <Grid3X3 className="w-4 h-4 inline mr-1" />
+                  <Grid className="w-4 h-4 inline mr-1" />
                   Kanban
                 </button>
                 <button
